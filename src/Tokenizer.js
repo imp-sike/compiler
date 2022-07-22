@@ -1,4 +1,27 @@
 /**
+ * Tokenizer sprc.
+ */
+const Spec = [
+    // skip white space
+    [/^\s+/, null],
+
+    //------------ skip comments
+    // single line comments
+    [/^\/\/.*/, null],
+
+    // multiline comments
+    [/^\/\*[\s\S]*?\*\//, null],
+
+    // number
+    [/^\d+/, "NUMBER"],
+
+    // strings
+    [/^"[^"]*"/, "STRING"],
+    [/^'[^']*'/, "STRING"]
+];
+
+
+/**
  * Tokenizer
  * 
  * Lazily pulls a tokenizer from a Stream
@@ -10,60 +33,62 @@ class Tokenizer {
     */
     init(string) {
         this._string = string;
-        this._cursor = 0; 
+        this._cursor = 0;
     }
 
     /**  
     * whether we still have more tokens
     */
-   hasMoreTokens() {
-    return this._cursor < this._string.length;
-   }
-
-   /**
-    * Whether the tokenizer reached EOF
-    */
-   isEOF() {
-    return this._cursor === this._string.length;
-   }
-
-   /**
-    * Obtains next tokens
-    */
-   getNextToken() {
-    if(!this.hasMoreTokens()) {
-        return null;
+    hasMoreTokens() {
+        return this._cursor < this._string.length;
     }
 
-    const string = this._string.slice(this._cursor);
-    if(!Number.isNaN(Number(string[0]))) {
-        let number = '';
-        while(!Number.isNaN(Number(string[this._cursor]))) {
-            number += string[this._cursor++];
+    /**
+     * Whether the tokenizer reached EOF
+     */
+    isEOF() {
+        return this._cursor === this._string.length;
+    }
+
+    /**
+     * Obtains next tokens
+     */
+    getNextToken() {
+        if (!this.hasMoreTokens()) {
+            return null;
         }
-        return {
-            "type": 'NUMBER',
-            value: number,
-        };
+
+        const string = this._string.slice(this._cursor);
+
+        for (const [regexp, tokenType] of Spec) {
+            const tokenValue = this._match(regexp, string);
+
+            // could not match this rule, continue
+            if (tokenValue == null) {
+                continue;
+            }
+
+            if (tokenType == null) {
+                return this.getNextToken();
+            }
+            return {
+                type: tokenType,
+                value: tokenValue,
+            };
+        }
+
+        throw new SyntaxError(`Unexpected Token: "${string[0]}"`);
     }
 
-    if(string[0] === '"') {
-        let s = '';
-        do {
-            s += this._string[this._cursor++];
-        } while(string[this._cursor]  !== '"' && !this.isEOF());
+    _match(regexp, string) {
+        const matched = regexp.exec(string);
+        if (matched == null) {
+            return null;
+        }
 
-        s += this._cursor++; // skip  "
-        return {
-            "type": "STRING",
-            "value": s,
-        };
-
+        this._cursor += matched[0].length;
+        return matched[0];
     }
-
-    return null;
-   }
-
 }
 
 module.exports = {

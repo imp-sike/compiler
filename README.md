@@ -19,4 +19,7 @@
 
 2. Literals =>  String and Number
 
+## Lecture 03
+[Link](https://www.youtube.com/watch?v=0ZDPvdp2uFk&list=PLGNbPb3dQJ_5FTPfFIg28UxuMpu7k0eT4&index=2f)
 
+1. Added Support for Rule based REGEX backed Tokenizer 
