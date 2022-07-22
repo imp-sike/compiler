@@ -1,6 +1,6 @@
 # Study of Compiler
 
-> Lecture 01 Outcomes
+## Lecture 01 Outcomes
 
 [Link](https://www.youtube.com/watch?v=4m7ubrdbWQU&list=PLGNbPb3dQJ_5FTPfFIg28UxuMpu7k0eT4)
 
@@ -12,7 +12,7 @@
 
 4. Backus-Naur form (BNF) is used to describe Syntax and Grammars of a language.
 
-> Lecture 02 Outcomes
+## Lecture 02 Outcomes
 [Link](https://www.youtube.com/watch?v=0ZDPvdp2uFk&list=PLGNbPb3dQJ_5FTPfFIg28UxuMpu7k0eT4&index=2)
 
 1. Added Manual Handler
