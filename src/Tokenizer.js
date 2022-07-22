@@ -12,6 +12,8 @@ const Spec = [
     // multiline comments
     [/^\/\*[\s\S]*?\*\//, null],
 
+    // semicolon
+    [/^;/, ";"],
     // number
     [/^\d+/, "NUMBER"],
 
