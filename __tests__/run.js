@@ -6,13 +6,16 @@ const assert = require('assert');
 /**
  * Lists of tests
  */
-const tests = [require("./literals_test.js"), require("./statement_list_test.js")];
+const tests = [require("./literals_test.js"),
+require("./statement_list_test.js"),
+require("./empty_statement_test.js"),
+require("./block_test.js"),];
 
 
 
 
 
-function test(program, expected){
+function test(program, expected) {
     const ast = parser.parse(program);
     assert.deepEqual(ast, expected);
 }

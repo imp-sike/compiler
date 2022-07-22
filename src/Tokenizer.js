@@ -14,6 +14,11 @@ const Spec = [
 
     // semicolon
     [/^;/, ";"],
+
+    // curly braces
+    [/^\{/, "{"],
+    [/^\}/, "}"],
+
     // number
     [/^\d+/, "NUMBER"],
 
