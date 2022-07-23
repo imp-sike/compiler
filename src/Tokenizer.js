@@ -15,9 +15,16 @@ const Spec = [
     // semicolon
     [/^;/, ";"],
 
+    // Math Operators +,-,*,/
+    [/^[+\-]/, "ADDITIVE_OPERATOR"],
+    [/^[*\/]/, "MULTIPLICATIVE_OPERATOR"],
+
+
     // curly braces
     [/^\{/, "{"],
     [/^\}/, "}"],
+    [/^\)/, ")"],
+    [/^\(/, "("],
 
     // number
     [/^\d+/, "NUMBER"],

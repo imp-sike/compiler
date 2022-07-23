@@ -57,7 +57,7 @@ class Parser {
     StatementList(stoplookahead = null) {
         const statementList = [this.Statement()];
 
-        while (this._lookahead != null  && this._lookahead.type != stoplookahead) {
+        while (this._lookahead != null && this._lookahead.type != stoplookahead) {
             statementList.push(this.Statement());
         }
         return statementList;
@@ -99,7 +99,7 @@ class Parser {
      * : '{' OptStatementList '}'
      * ;
      */
-     BlockStatement() {
+    BlockStatement() {
         this._eat("{");
 
         const body = this._lookahead.type !== '}' ? this.StatementList("}") : [];
@@ -108,7 +108,7 @@ class Parser {
             type: 'BlockStatement',
             body,
         };
-     }
+    }
 
 
 
@@ -128,13 +128,83 @@ class Parser {
     }
 
 
+
+    /**
+     * AdditiveExpression
+     * : MultiplicativeExpression
+     * | AdditiveExpression ADDITIVE_OPERATOR Literal
+     * ;
+     */
+    AdditiveExpression() {
+        return this._BinaryExpression('PrimaryExpression', 'ADDITIVE_OPERATOR');
+    }
+
+    /**
+     * MultiplicativeExpression
+     * : PrimaryExpression
+     * | AdditiveExpression MULTIPLICATIVE_OPERATOR Literal
+     * ;
+     */
+    MultiplicativeExpression() {
+        return this._BinaryExpression('PrimaryExpression', 'MULTIPLICATIVE_OPERATOR');
+    }
+
+    /**
+     * Generic Binary Expression
+     */
+    _BinaryExpression(builderName, operatorToken) {
+        let left = this[builderName]();
+        while (this._lookahead.type === operatorToken) {
+            // operator +,-
+            const operator = this._eat(operatorToken).value;
+            const right = this[builderName]();
+
+            left = {
+                type: 'BinaryExpression',
+                operator,
+                left,
+                right,
+            };
+        }
+
+        return left;
+    }
+
+
+    /**
+     * PrimaryExpression
+     * : Literal
+     * | ParenthizedExpression
+     * ;
+     */
+    PrimaryExpression() {
+        switch (this._lookahead.type) {
+            case '(':
+                return this.ParenthizedExpression();
+            default:
+                return this.Literal();
+        }
+    }
+
+    /**
+     * ParenthizedExpression
+     * : '(' Expression ')'
+     * ;
+     */
+    ParenthizedExpression() {
+        this._eat('(');
+        const expression = this.Expression();
+        this._eat(')');
+        return expression;
+    }
+
     /** 
      * Expression
      * : Literal
      * ;
      */
     Expression() {
-        return this.Literal();
+        return this.AdditiveExpression();
     }
 
 

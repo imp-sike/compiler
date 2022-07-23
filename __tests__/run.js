@@ -9,10 +9,19 @@ const assert = require('assert');
 const tests = [require("./literals_test.js"),
 require("./statement_list_test.js"),
 require("./empty_statement_test.js"),
+require("./math_test.js"),
 require("./block_test.js"),];
 
 
+function exec() {
+    const program = `
+    43+12*10;
+    `;
+    const ast = parser.parse(program);
+    console.log(JSON.stringify(ast, null, 2));
+}
 
+exec();
 
 
 function test(program, expected) {
